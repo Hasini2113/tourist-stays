@@ -16,31 +16,22 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// analytics only in browser (optional)
-if (typeof window !== "undefined") {
-  try {
-    getAnalytics(app);
-  } catch (e) {
-    // ignore in dev or unsupported environments
-    console.warn("Analytics init failed:", e?.message ?? e);
-  }
-}
+// optional analytics (catch errors)
+try { if (typeof window !== "undefined") getAnalytics(app); } catch (e) { /* ignore */ }
 
-// initialize auth and db
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// persist auth in local storage (keeps login across reloads)
+// keep login persistent
 setPersistence(auth, browserLocalPersistence).catch((e) => {
   console.warn("setPersistence error:", e?.message || e);
 });
 
-// DEBUG helper: attach to window so you can inspect from console.
-// REMOVE or comment out this line before production.
+// DEBUG only — expose to window so you can inspect runtime values in the browser console
 if (typeof window !== "undefined") {
+  window.__FIREBASE_CONFIG__ = firebaseConfig;
   window.auth = auth;
   window.db = db;
-  window.__FIREBASE_CONFIG__ = firebaseConfig; // helpful to confirm envs in runtime
 }
 
 export default app;
