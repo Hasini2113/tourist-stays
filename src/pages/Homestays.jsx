@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo, useEffect } from "react";
 import useFetch from "../hooks/useFetch";
 import HomestayCard from "../components/HomestayCard";
-import HomestayMap from "../components/HomestayMap";
+
 import {
   Typography,
   CircularProgress,
