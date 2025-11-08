@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -11,16 +11,31 @@ import {
   Rating,
   Divider,
   Stack,
+  IconButton,
 } from '@mui/material';
 import {
   BedOutlined,
   BathtubOutlined,
   PersonOutlineOutlined,
   FlashOn,
+  NavigateNext,
+  NavigateBefore,
 } from '@mui/icons-material';
 
 export default function HomestayCard({item, onBook, id}) {
   const { rooms, amenities, rating, reviews, instant } = item;
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = item.images || [item.image];
+  
+  const handleNextImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrevImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
   
   return (
     <Card id={id} sx={{
@@ -29,14 +44,60 @@ export default function HomestayCard({item, onBook, id}) {
       height: '100%',
       position: 'relative'
     }}>
-      {/* Image */}
-      <CardMedia
-        component="img"
-        height="200"
-        image={item.image || 'https://source.unsplash.com/featured/?accommodation'}
-        alt={item.title}
-        sx={{ objectFit: 'cover' }}
-      />
+      {/* Image Carousel */}
+      <Box sx={{ position: 'relative' }}>
+        <CardMedia
+          component="img"
+          height="200"
+          image={images[currentImageIndex]}
+          alt={`${item.title} - View ${currentImageIndex + 1}`}
+          sx={{ objectFit: 'cover' }}
+        />
+        {images.length > 1 && (
+          <>
+            <IconButton
+              sx={{
+                position: 'absolute',
+                left: 8,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                bgcolor: 'rgba(255, 255, 255, 0.8)',
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+              }}
+              onClick={handlePrevImage}
+            >
+              <NavigateBefore />
+            </IconButton>
+            <IconButton
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                bgcolor: 'rgba(255, 255, 255, 0.8)',
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+              }}
+              onClick={handleNextImage}
+            >
+              <NavigateNext />
+            </IconButton>
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 8,
+                right: 8,
+                bgcolor: 'rgba(0, 0, 0, 0.6)',
+                color: 'white',
+                px: 1,
+                borderRadius: 1,
+                fontSize: '0.75rem',
+              }}
+            >
+              {currentImageIndex + 1} / {images.length}
+            </Box>
+          </>
+        )}
+      </Box>
 
       {/* Instant Book badge */}
       {instant && (
