@@ -97,7 +97,7 @@ export default function Explore() {
   const visible = useMemo(() => results, [results]);
 
   return (
-    <BackgroundWrapper>
+    <BackgroundWrapper type="explore">
       <Paper
         elevation={10}
         sx={{
@@ -106,17 +106,37 @@ export default function Explore() {
           p: 4,
           borderRadius: 3,
           backdropFilter: "blur(8px)",
-          backgroundColor: "rgba(255,255,255,0.85)",
+          backgroundColor: "rgba(255,255,255,0.5)",
         }}
       >
         {/* If user is not logged in, show buttons that navigate to full auth pages */}
         {!user && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mb: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 3 }}>
             <Button
               variant="outlined"
               onClick={() => {
                 const qs = buildSearchParams();
                 navigate(`/login${qs ? `?${qs}` : ""}`);
+              }}
+              sx={{
+                px: 3,
+                py: 1.2,
+                borderRadius: 2,
+                borderWidth: 2,
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                textTransform: 'none',
+                borderColor: '#1976d2',
+                color: '#1976d2',
+                backgroundColor: 'rgba(255,255,255,0.8)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: '#1976d2',
+                  color: 'white',
+                  borderColor: '#1565c0',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 20px rgba(25, 118, 210, 0.3)',
+                },
               }}
             >
               Login
@@ -126,6 +146,22 @@ export default function Explore() {
               onClick={() => {
                 const qs = buildSearchParams();
                 navigate(`/signup${qs ? `?${qs}` : ""}`);
+              }}
+              sx={{
+                px: 3,
+                py: 1.2,
+                borderRadius: 2,
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                textTransform: 'none',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 25px rgba(102, 126, 234, 0.6)',
+                },
               }}
             >
               Sign up
@@ -267,11 +303,11 @@ export default function Explore() {
         </Box>
 
         <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
             Popular Destinations
           </Typography>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             {visible.length === 0 ? (
               <Grid item xs={12}>
                 <Typography align="center">No destinations match your search.</Typography>
@@ -280,24 +316,45 @@ export default function Explore() {
               visible.map((d) => (
                 <Grid key={d} item xs={12} sm={6} md={4}>
                   <Paper
-                    elevation={3}
+                    elevation={4}
                     onClick={() => handleDestinationClick(d)}
                     sx={{
                       display: "flex",
+                      flexDirection: "column",
                       alignItems: "center",
-                      gap: 2,
-                      p: 2,
-                      borderRadius: 2,
+                      justifyContent: "center",
+                      gap: 1.5,
+                      p: 3,
+                      borderRadius: 3,
                       cursor: "pointer",
-                      '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 8px 30px rgba(0,0,0,0.18)' },
+                      backgroundColor: "rgba(255,255,255,0.6)",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255,255,255,0.3)",
+                      transition: "all 0.3s ease",
+                      textAlign: "center",
+                      '&:hover': { 
+                        transform: 'translateY(-8px)',
+                        boxShadow: '0 16px 40px rgba(0,0,0,0.2)',
+                        backgroundColor: "rgba(255,255,255,0.8)",
+                      },
                     }}
                   >
-                    <Avatar sx={{ width: 56, height: 56 }}>{d.charAt(0)}</Avatar>
+                    <Avatar sx={{ 
+                      width: 72, 
+                      height: 72,
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      fontSize: '2rem',
+                      fontWeight: 700
+                    }}>
+                      {d.charAt(0)}
+                    </Avatar>
                     <Box>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#000' }}>
                         {d}
                       </Typography>
-                      <Typography variant="caption">Homestays - Villas & Apts</Typography>
+                      <Typography variant="body2" sx={{ color: '#666' }}>
+                        Homestays - Villas & Apts
+                      </Typography>
                     </Box>
                   </Paper>
                 </Grid>

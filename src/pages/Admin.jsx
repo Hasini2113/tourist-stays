@@ -67,65 +67,144 @@ export default function Admin() {
   };
 
   return (
-    <BackgroundWrapper>
+    <BackgroundWrapper type="admin">
       <Paper
-        elevation={8}
+        elevation={10}
         sx={{
           p: 4,
-          borderRadius: 4,
-          maxWidth: "1100px",
+          borderRadius: 5,
+          maxWidth: "1200px",
           mx: "auto",
-          backgroundColor: "rgba(255,255,255,0.18)",
-          backdropFilter: "blur(12px)",
-          color: theme.palette.mode === "dark" ? "#fff" : "#111",
+          background: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
+          backdropFilter: "blur(16px)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
         }}
       >
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{ fontWeight: 700, mb: 3, color: theme.palette.mode === "dark" ? "#fff" : "#000" }}
-        >
-          Registered Users
-        </Typography>
-
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mb: 1 }}>
+            <Box sx={{
+              width: 56,
+              height: 56,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg,#ffd700 60%,#1976d2 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 2px 12px rgba(25,118,210,0.18)",
+              mr: 2
+            }}>
+              <span role="img" aria-label="admin" style={{ fontSize: 32 }}>👑</span>
+            </Box>
+            <Typography
+              variant="h3"
+              sx={{ fontWeight: 800, color: theme.palette.mode === "dark" ? "#fff" : "#222", letterSpacing: "1px" }}
+            >
+              Admin Dashboard
+            </Typography>
+          </Box>
+          <Typography variant="subtitle1" sx={{ color: theme.palette.mode === "dark" ? "#eee" : "#444" }}>
+            Manage registered users and roles
+          </Typography>
+        </Box>
         {loading ? (
-          <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
-            <CircularProgress />
+          <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+            <CircularProgress size={48} />
           </Box>
         ) : users.length === 0 ? (
           <Typography align="center">No registered users found.</Typography>
         ) : (
-          <List>
+          <Box sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+            gap: 3,
+            mt: 2,
+          }}>
             {users.map((u) => (
-              <React.Fragment key={u.id}>
-                <ListItem>
-                  <ListItemText
-                    primary={
-                      <Box>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                          {u.email || u.name || "(no email)"}
-                        </Typography>
-                        <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                          Role: {u.role || "user"} • Doc ID: {u.id}
-                        </Typography>
-                      </Box>
-                    }
-                    secondary={u.createdAt ? `Signed up: ${new Date(u.createdAt).toLocaleString()}` : ""}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(u.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <Divider />
-              </React.Fragment>
+              <Paper
+                key={u.id}
+                elevation={6}
+                sx={{
+                  p: 3,
+                  borderRadius: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  position: "relative",
+                  background: theme.palette.mode === "dark"
+                    ? "rgba(0,0,0,0.45)"
+                    : "rgba(255,255,255,0.92)",
+                  boxShadow: "0 4px 24px rgba(25,118,210,0.10)",
+                  transition: "transform 0.2s, box-shadow 0.2s",
+                  '&:hover': {
+                    transform: 'translateY(-4px) scale(1.03)',
+                    boxShadow: '0 8px 32px rgba(25,118,210,0.18)',
+                  },
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", mb: 2, width: "100%" }}>
+                  <Box
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg,#1976d2 60%,#ffd700 100%)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      mr: 2,
+                      boxShadow: "0 2px 8px rgba(25,118,210,0.12)",
+                    }}
+                  >
+                    <Typography variant="h5" sx={{ color: "#fff", fontWeight: 700 }}>
+                      {u.email ? u.email[0].toUpperCase() : "U"}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: theme.palette.mode === "dark" ? "#1976d2" : "#222" }}>
+                      {u.email || u.name || "(no email)"}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: theme.palette.mode === "dark" ? "#eee" : "#555" }}>
+                      {u.createdAt ? `Signed up: ${new Date(u.createdAt).toLocaleString()}` : ""}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleDelete(u.id)}
+                    sx={{ ml: 1, color: "#d32f2f", background: "rgba(255,255,255,0.7)", '&:hover': { background: "#ffd700" } }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: "#888" }}>Doc ID:</Typography>
+                  <Typography variant="caption" sx={{ color: theme.palette.mode === "dark" ? "#fff" : "#222", fontWeight: 500 }}>{u.id}</Typography>
+                </Box>
+                <Box sx={{ mt: 1 }}>
+                  <Box
+                    component="span"
+                    sx={{
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: 2,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      background: u.role === "admin"
+                        ? "linear-gradient(90deg,#ffd700 60%,#1976d2 100%)"
+                        : "linear-gradient(90deg,#1976d2 60%,#ffd700 100%)",
+                      color: u.role === "admin" ? "#222" : "#fff",
+                      boxShadow: "0 1px 4px rgba(25,118,210,0.10)",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    {u.role ? u.role.toUpperCase() : "USER"}
+                  </Box>
+                </Box>
+              </Paper>
             ))}
-          </List>
+          </Box>
         )}
-
-        <Box sx={{ mt: 3, textAlign: "center" }}>
+        <Box sx={{ mt: 4, textAlign: "center" }}>
           <Typography variant="body2" color="text.secondary">
             Note: Deleting here removes the Firestore user document only. To remove the Firebase Authentication user, use the Admin SDK / backend.
           </Typography>

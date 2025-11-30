@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -11,31 +11,17 @@ import {
   Rating,
   Divider,
   Stack,
-  IconButton,
 } from '@mui/material';
 import {
   BedOutlined,
   BathtubOutlined,
   PersonOutlineOutlined,
   FlashOn,
-  NavigateNext,
-  NavigateBefore,
 } from '@mui/icons-material';
 
 export default function HomestayCard({item, onBook, id}) {
   const { rooms, amenities, rating, reviews, instant } = item;
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = item.images || [item.image];
-  
-  const handleNextImage = (e) => {
-    e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const handlePrevImage = (e) => {
-    e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
+  const image = item.image || item.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image';
   
   return (
     <Card id={id} sx={{
@@ -44,59 +30,33 @@ export default function HomestayCard({item, onBook, id}) {
       height: '100%',
       position: 'relative'
     }}>
-      {/* Image Carousel */}
-      <Box sx={{ position: 'relative' }}>
-        <CardMedia
-          component="img"
-          height="200"
-          image={images[currentImageIndex]}
-          alt={`${item.title} - View ${currentImageIndex + 1}`}
-          sx={{ objectFit: 'cover' }}
+      {/* Single Image */}
+      <Box sx={{ 
+        position: 'relative', 
+        overflow: 'hidden', 
+        width: '100%',
+        height: '200px',
+        backgroundColor: '#f5f5f5'
+      }}>
+        <img
+          src={image}
+          alt={item.title}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: 'block'
+          }}
+          crossOrigin="anonymous"
+          loading="lazy"
+          onError={(e) => {
+            console.log('Image failed to load:', image);
+            e.target.style.display = 'none';
+          }}
+          onLoad={(e) => {
+            console.log('Image loaded successfully:', image);
+          }}
         />
-        {images.length > 1 && (
-          <>
-            <IconButton
-              sx={{
-                position: 'absolute',
-                left: 8,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                bgcolor: 'rgba(255, 255, 255, 0.8)',
-                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
-              }}
-              onClick={handlePrevImage}
-            >
-              <NavigateBefore />
-            </IconButton>
-            <IconButton
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                bgcolor: 'rgba(255, 255, 255, 0.8)',
-                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
-              }}
-              onClick={handleNextImage}
-            >
-              <NavigateNext />
-            </IconButton>
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: 8,
-                right: 8,
-                bgcolor: 'rgba(0, 0, 0, 0.6)',
-                color: 'white',
-                px: 1,
-                borderRadius: 1,
-                fontSize: '0.75rem',
-              }}
-            >
-              {currentImageIndex + 1} / {images.length}
-            </Box>
-          </>
-        )}
       </Box>
 
       {/* Instant Book badge */}

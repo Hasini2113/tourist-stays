@@ -19,20 +19,20 @@ export default function Guide() {
 
   if (loading)
     return (
-      <BackgroundWrapper>
+      <BackgroundWrapper type="guide">
         <CircularProgress sx={{ color: "white" }} />
       </BackgroundWrapper>
     );
 
   if (error)
     return (
-      <BackgroundWrapper>
+      <BackgroundWrapper type="guide">
         <Typography color="error">Failed to load guides.</Typography>
       </BackgroundWrapper>
     );
 
   return (
-    <BackgroundWrapper>
+    <BackgroundWrapper type="guide">
       <Paper
         elevation={8}
         sx={{

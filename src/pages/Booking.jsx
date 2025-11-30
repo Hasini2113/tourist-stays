@@ -22,7 +22,7 @@ export default function Bookings() {
   };
 
   return (
-    <BackgroundWrapper>
+    <BackgroundWrapper type="booking">
       <Paper
         elevation={6}
         sx={{

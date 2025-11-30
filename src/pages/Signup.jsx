@@ -78,13 +78,15 @@ export default function Signup() {
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundImage: "url('/loginbackground.jpg')",
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1500051638674-ff996a0ec29d?w=1920&q=80')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        position: "relative",
       }}
     >
       <Paper
@@ -93,6 +95,8 @@ export default function Signup() {
           width: 420,
           backgroundColor: "rgba(255, 255, 255, 0.85)",
           backdropFilter: "blur(5px)",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <Typography variant="h5" gutterBottom>

@@ -15,7 +15,7 @@ export default function Host() {
   }
 
   return (
-    <BackgroundWrapper>
+    <BackgroundWrapper type="host">
       <Paper
         elevation={5}
         sx={{

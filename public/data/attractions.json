@@ -17,4 +17,23 @@
     "description": "Popular viewpoint for sunsets.",
     "distance": 5.4
   }
+  ,
+  {
+    "id": 4,
+    "name": "Priya Sharma",
+    "description": "Certified local guide specializing in heritage walks and food tours. Fluent in English and Hindi.",
+    "distance": 0.0
+  },
+  {
+    "id": 5,
+    "name": "Ravi Kumar",
+    "description": "Nature and trekking guide with 10+ years experience. Offers birdwatching and hiking trips.",
+    "distance": 0.0
+  },
+  {
+    "id": 6,
+    "name": "Ayesha Patel",
+    "description": "Cultural guide for art, music, and local festivals. Available for private and group tours.",
+    "distance": 0.0
+  }
 ]

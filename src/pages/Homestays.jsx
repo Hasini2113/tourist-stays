@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo, useEffect } from "react";
 import useFetch from "../hooks/useFetch";
 import HomestayCard from "../components/HomestayCard";
-
+import HomestayMap from "../components/HomestayMap";
 import {
   Typography,
   CircularProgress,
@@ -225,28 +225,29 @@ export default function Homestays() {
 
   if (loading)
     return (
-      <BackgroundWrapper>
+      <BackgroundWrapper type="homestays">
         <CircularProgress sx={{ color: "white" }} />
       </BackgroundWrapper>
     );
 
   if (error)
     return (
-      <BackgroundWrapper>
+      <BackgroundWrapper type="homestays">
         <Typography color="error">Failed to load homestays.</Typography>
       </BackgroundWrapper>
     );
 
   return (
-    <BackgroundWrapper>
+    <BackgroundWrapper type="homestays">
       <Paper
         elevation={10}
         sx={{
           p: 5,
           borderRadius: 5,
-          maxWidth: "1300px",
+          maxWidth: "1100px",
           mx: "auto",
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
+          my: 3,
+          backgroundColor: "rgba(255, 255, 255, 0.15)",
           backdropFilter: "blur(14px)",
           boxShadow: "0 8px 40px rgba(0, 0, 0, 0.25)",
           color: "#fff",
@@ -270,11 +271,15 @@ export default function Homestays() {
 
         {/* Filters Section */}
         <Paper
+          elevation={8}
           sx={{
             mb: 4,
             p: 3,
-            borderRadius: 3,
-            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            borderRadius: 6,
+            background: 'rgba(255,255,255,0.25)',
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.18)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255,255,255,0.18)',
           }}
         >
           <Stack spacing={3}>
@@ -282,31 +287,46 @@ export default function Homestays() {
             <Box sx={{ display: "flex", gap: 2 }}>
               <TextField
                 fullWidth
-                variant="outlined"
+                variant="filled"
                 placeholder="Search by location or homestay name"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Search />
+                      <Search color="primary" />
                     </InputAdornment>
                   ),
                   endAdornment: searchTerm && (
                     <InputAdornment position="end">
-                      <IconButton size="small" onClick={() => setSearchTerm("")}>
-                        <Clear />
+                      <IconButton size="small" onClick={() => setSearchTerm("")}> 
+                        <Clear color="primary" />
                       </IconButton>
                     </InputAdornment>
                   ),
+                  disableUnderline: true,
+                  sx: {
+                    borderRadius: 3,
+                    background: 'rgba(255,255,255,0.6)',
+                    boxShadow: '0 2px 8px rgba(31,38,135,0.08)',
+                  }
+                }}
+                sx={{
+                  borderRadius: 3,
+                  background: 'rgba(255,255,255,0.6)',
+                  boxShadow: '0 2px 8px rgba(31,38,135,0.08)',
                 }}
               />
-              <FormControl sx={{ minWidth: 200 }}>
+              <FormControl sx={{ minWidth: 200 }} variant="filled">
                 <InputLabel>Sort By</InputLabel>
                 <Select
                   value={sortBy}
                   label="Sort By"
                   onChange={(e) => setSortBy(e.target.value)}
+                  sx={{
+                    borderRadius: 2,
+                    background: 'rgba(255,255,255,0.7)',
+                  }}
                 >
                   <MenuItem value="recommended">Recommended</MenuItem>
                   <MenuItem value="price-low">Price: Low to High</MenuItem>
@@ -318,8 +338,10 @@ export default function Homestays() {
 
             {/* Price Range */}
             <Box>
-              <Typography gutterBottom color="text.primary">
-                Price Range (₹)
+              <Typography gutterBottom color="primary" fontWeight={600}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span role="img" aria-label="price">💸</span> Price Range (₹)
+                </span>
               </Typography>
               <Slider
                 value={priceRange}
@@ -328,12 +350,17 @@ export default function Homestays() {
                 min={0}
                 max={10000}
                 step={500}
+                sx={{
+                  color: 'primary.main',
+                  height: 6,
+                  borderRadius: 3,
+                }}
               />
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="body2" color="text.secondary">
+              <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
+                <Typography variant="body2" color="text.secondary" fontWeight={500}>
                   ₹{priceRange[0]}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" fontWeight={500}>
                   ₹{priceRange[1]}
                 </Typography>
               </Box>
@@ -341,10 +368,12 @@ export default function Homestays() {
 
             {/* Amenities */}
             <Box>
-              <Typography gutterBottom color="text.primary">
-                Amenities
+              <Typography gutterBottom color="primary" fontWeight={600}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span role="img" aria-label="amenities">🛏️</span> Amenities
+                </span>
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
                 {allAmenities.map((amenity) => (
                   <Chip
                     key={amenity}
@@ -359,19 +388,41 @@ export default function Homestays() {
                       }
                     }}
                     color={selectedAmenities.includes(amenity) ? "primary" : "default"}
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: 15,
+                      px: 2,
+                      py: 1,
+                      borderRadius: 2,
+                      boxShadow: selectedAmenities.includes(amenity)
+                        ? '0 2px 8px rgba(31,38,135,0.12)'
+                        : 'none',
+                      background: selectedAmenities.includes(amenity)
+                        ? 'linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%)'
+                        : 'rgba(255,255,255,0.7)',
+                      color: selectedAmenities.includes(amenity)
+                        ? '#fff'
+                        : 'primary.main',
+                      transition: 'all 0.2s',
+                      cursor: 'pointer',
+                    }}
                   />
                 ))}
               </Box>
             </Box>
 
             {/* Guest Count and Instant Booking */}
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <FormControl sx={{ minWidth: 200 }}>
+            <Box sx={{ display: "flex", gap: 2, alignItems: 'center' }}>
+              <FormControl sx={{ minWidth: 200 }} variant="filled">
                 <InputLabel>Guests</InputLabel>
                 <Select
                   value={guestCount}
                   label="Guests"
                   onChange={(e) => setGuestCount(e.target.value)}
+                  sx={{
+                    borderRadius: 2,
+                    background: 'rgba(255,255,255,0.7)',
+                  }}
                 >
                   <MenuItem value="">Any</MenuItem>
                   <MenuItem value="2">2+ guests</MenuItem>
@@ -385,6 +436,19 @@ export default function Homestays() {
                 label="Instant Booking"
                 onClick={() => setInstantOnly(!instantOnly)}
                 color={instantOnly ? "primary" : "default"}
+                sx={{
+                  fontWeight: 500,
+                  px: 2,
+                  py: 1,
+                  borderRadius: 2,
+                  background: instantOnly
+                    ? 'linear-gradient(90deg, #f7971e 0%, #ffd200 100%)'
+                    : 'rgba(255,255,255,0.7)',
+                  color: instantOnly ? '#fff' : 'primary.main',
+                  boxShadow: instantOnly ? '0 2px 8px rgba(31,38,135,0.12)' : 'none',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
               />
               {hasActiveFilters && (
                 <Chip
@@ -392,6 +456,17 @@ export default function Homestays() {
                   label="Clear All Filters"
                   onClick={handleClearFilters}
                   variant="outlined"
+                  sx={{
+                    fontWeight: 500,
+                    px: 2,
+                    py: 1,
+                    borderRadius: 2,
+                    background: 'rgba(255,255,255,0.7)',
+                    color: 'primary.main',
+                    boxShadow: 'none',
+                    transition: 'all 0.2s',
+                    cursor: 'pointer',
+                  }}
                 />
               )}
             </Box>
